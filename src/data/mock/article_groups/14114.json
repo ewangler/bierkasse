@@ -1,0 +1,26 @@
+{
+  "type": "articlegroup",
+  "meta": {
+      "created": "2022-05-15 14:42:59",
+      "createuser": {
+          "label": "Emily",
+          "type": "user"
+      },
+      "lastmodified": "2022-05-15 14:43:09",
+      "lastmodifieduser": {
+          "label": "Emily",
+          "type": "user"
+      }
+  },
+  "readonly": false,
+  "properties": {
+      "title": "Merchandise"
+  },
+  "children": {
+      "article": [
+          5936
+      ]
+  },
+  "links": [],
+  "parents": []
+}

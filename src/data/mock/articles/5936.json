@@ -1,0 +1,28 @@
+{
+  "type": "article",
+  "meta": {
+      "created": "2019-01-04 15:10:06",
+      "createuser": {
+          "label": "David Denzler",
+          "type": "user"
+      },
+      "lastmodified": "2022-05-15 14:43:09",
+      "lastmodifieduser": {
+          "label": "Emily",
+          "type": "user"
+      }
+  },
+  "readonly": false,
+  "properties": {
+      "title": "CAPXBIBXTRUK",
+      "description": "BIB Käppli",
+      "price": 35,
+      "quantity": -41,
+      "place": ""
+  },
+  "children": [],
+  "links": [],
+  "parents": [
+      14114
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "type": "articlegroup",
+  "meta": {
+      "created": "2022-05-15 14:42:36",
+      "createuser": {
+          "label": "Emily",
+          "type": "user"
+      },
+      "lastmodified": "2022-05-15 14:44:08",
+      "lastmodifieduser": {
+          "label": "Emily",
+          "type": "user"
+      }
+  },
+  "readonly": false,
+  "properties": {
+      "title": "Flaschenbier"
+  },
+  "children": {
+      "article": [
+          14115
+      ]
+  },
+  "links": [],
+  "parents": []
+}
