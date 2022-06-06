@@ -5,6 +5,7 @@ import MemberSearch, { Member } from './MemberSearch'
 import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Alert, Avatar, Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, Modal } from '@mui/material'
+import { Link } from 'react-router-dom'
 
 type Props = {
   articles: Article[]
@@ -27,6 +28,11 @@ function Cart(props: Props) {
 
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [member, setMember] = useState<Member>()
+
+  const vat = (price: number) => {
+    const vatRate = 7.7
+    return price - price / (vatRate/100 + 1)
+  }
 
   const articleList = props.articles.map((article) => {
     return <ListItem key={article.properties.title}
@@ -59,7 +65,9 @@ function Cart(props: Props) {
         {articleList}
       </List>
     }
-    <h3>total: {totalPrice.toFixed(2)}</h3>
+    <h4>zwischentotal inkl. MWSt: {totalPrice.toFixed(2)} CHF</h4>
+    <h4>MWSt: {vat(totalPrice).toFixed(2)} CHF</h4>
+    <h3>total: {totalPrice.toFixed(2)} CHF</h3>
 
     <Modal
       open={modalIsOpen}
@@ -75,6 +83,7 @@ function Cart(props: Props) {
 
     <MemberSearch setMember={setMember} member={member} />
     <Button variant='outlined' onClick={() => setModalIsOpen(true)}>Neu erfassen</Button>
+    <Link to='/checkout'>Checkout</Link>
   </div>
 }
 export default Cart

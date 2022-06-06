@@ -1,8 +1,12 @@
-import Grid from '@mui/material/Grid';
 import React, { useState } from 'react';
 import { Article } from './components/Articles';
-import Cart from './components/Cart';
-import Categories from './components/Categories';
+import {
+  HashRouter as Router,
+  Route,
+  Routes,
+} from "react-router-dom";
+import Checkout from './components/Checkout';
+import StartPage from './pages/StartPage';
 
 
 export type Purchase = {
@@ -25,29 +29,16 @@ function App() {
 
   // const properties = sections['properties']
 
-  const deleteItem = (article: Article) => {
-    const filteredArticles = purchase.articles.filter((a) => {
-      return a !== article
-    })
-
-    setPurchase({ ...purchase, articles: filteredArticles })
-  }
-
   const [purchase, setPurchase] = useState<Purchase>({ articles: new Array<Article>(), customer: {} });
 
   return (
     <div className="App">
-      <h1>Bierkasse</h1>
-      <div className='content-main'>
-        <Grid container spacing={2}>
-          <Grid item xs={6} md={9}>
-            <Categories purchase={purchase} setPurchase={setPurchase} />
-          </Grid>
-          <Grid item xs={3} md={3}>
-            <Cart articles={purchase.articles} deleteItem={deleteItem} />
-          </Grid>
-        </Grid>
-      </div>
+      <Router basename="/">
+        <Routes>
+          <Route path="/" element={<StartPage purchase={purchase} setPurchase={setPurchase} />}/>
+          <Route path="/checkout" element={<Checkout purchase={purchase}/>}/>
+        </Routes>
+      </Router>
     </div>
   );
 }
