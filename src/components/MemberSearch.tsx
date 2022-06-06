@@ -1,7 +1,10 @@
+import Button from '@mui/material/Button'
 import React, { useState } from 'react'
 import client from '../client'
 
 type Props = {
+  setMember: any
+  member: Member | undefined
 }
 
 export type Member = {
@@ -12,12 +15,11 @@ export type Member = {
 }
 
 function MemberSearch(props: Props) {
-  const [member, setMember] = useState<Member>()
   const [memberId, setMemberId] = useState<string>()
 
   const deleteMember = (e: any) => {
     e.preventDefault();
-    setMember(undefined)
+    props.setMember(undefined)
   }
 
   const handleSubmit = (e: any) => {
@@ -29,23 +31,23 @@ function MemberSearch(props: Props) {
       if (memberArray.length > 0) {
         client.get(`/member/${memberArray[0]}`).then((memberResponse) => {
           const member = memberResponse.data
-          console.log(member)
-          setMember(member)
+          props.setMember(member)
         })
       }
     })
   }
 
   return <div className='member-search'>
-    {member ?
+    Kunde: <br/>
+    {props.member ?
       <>
-      member: {member?.properties.Vorname} {member?.properties.Name}
-      <button onClick={deleteMember}>X</button>
+      {props.member?.properties.Vorname} {props.member?.properties.Name}
+      <Button onClick={deleteMember}>X</Button>
       </>
       :
       <form onSubmit={handleSubmit}>
         <input type="text" id="memberId" name="memberId" value={memberId} onChange={e => setMemberId(e.target.value)} />
-        <button type="submit">Suchen</button>
+        <Button variant="contained" type="submit">Suchen</Button>
       </form>
     }
   </div>

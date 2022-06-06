@@ -2,6 +2,7 @@ import React from 'react'
 import Articles, { Article } from './Articles'
 import { Purchase } from '../App'
 import client from '../client'
+import Button from '@mui/material/Button';
 
 type Props = {
   setPurchase: any
@@ -49,14 +50,14 @@ function Categories(props: Props) {
     return <div key={group.properties.title}>
       <h2>{group.properties.title} ({group.children.article.length})</h2>
       {/* <img src={require('../data/images/brauereiimberg_100.png')} alt="bild" onClick={() => setValue((group))}/> <br/> */}
-      <button onClick={() => setValue((group))}>auswählen</button>
+      <Button variant="outlined" onClick={() => setValue((group))}>auswählen</Button>
     </div>
   })
 
   return <div className='categories'>
     {value ?
       <>
-        <button onClick={() => setValue(undefined)}>{"<="}</button>
+        <Button variant="outlined" onClick={() => setValue(undefined)}>{"<="}</Button>
         <Articles group={value} selectArticle={selectArticle} />
       </>
       :

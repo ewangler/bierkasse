@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { ArticleGroup } from './Categories'
 import { Article } from './Articles'
+import Button from '@mui/material/Button'
 
 type Props = {
   closeModal: any
@@ -20,7 +20,7 @@ function Calculator(props: Props) {
 
   const numClickHandler = (e: any) => {
     e.preventDefault();
-    const btnValue = e.target.innerHTML
+    const btnValue = e.currentTarget.value
     if (value === 0) {
       setValue(btnValue)
     } else {
@@ -46,13 +46,14 @@ function Calculator(props: Props) {
       <div className="numberpad flex-grid-3">
         {btnValues.flat().map((btn, i) => {
           return (
-            <button
+            <Button
+              variant={btn === "ok" || btn === 'C' ? 'contained' : 'outlined'}
               key={i}
               className={btn === "ok" ? "ok" : btn === 'C' ? 'clear' : ""}
               value={btn}
               onClick={btn === "ok" ? okClickHandler : btn === 'C' ? clearClickHandler : numClickHandler}>
               {btn}
-            </button>
+            </Button>
           )
         })}
       </div>

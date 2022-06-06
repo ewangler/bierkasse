@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { ArticleGroup } from './Categories'
 import Calculator from './Calculator'
-import Modal from 'react-modal'
 import client from '../client'
+import Button from '@mui/material/Button'
+import Modal from '@mui/material/Modal'
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
 
 type Props = {
   group: ArticleGroup | undefined
@@ -17,6 +20,18 @@ export type Article = {
     count?: number
   }
 }
+
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+};
 
 function Articles(props: Props) {
   const [articles, setArticles] = useState<Article[]>([])
@@ -58,19 +73,30 @@ function Articles(props: Props) {
   }
 
   const articleElements = articles.map((article) => {
-    return <div key={article.properties.title} className="article-item col">
-      <button onClick={() => openModal(article)} className="select-article">
-        {article.properties.description}: {article.properties.price.toFixed(2)}
-      </button>
-    </div>
+    return <Grid item sm={5} md={5}>
+      <div key={article.properties.title} className="article-item col">
+        <Button variant="contained" onClick={() => openModal(article)} className="select-article">
+          {article.properties.description}: {article.properties.price.toFixed(2)}
+        </Button>
+      </div>
+    </Grid>
   })
 
 
-  return <div className='articles flex-grid-4'>
-    {articleElements}
-    <Modal isOpen={modalIsOpen} className='calculator-modal'>
-      <button onClick={() => setModalIsOpen(false)}>x</button>
-      <Calculator closeModal={closeModal} article={currentArticle} />
+  return <div className='articles'>
+    <Grid container spacing={1} columns={20}>
+      {articleElements}
+    </Grid>
+
+    <Modal
+      open={modalIsOpen}
+      onClose={() => setModalIsOpen(false)}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <Calculator closeModal={closeModal} article={currentArticle} />
+      </Box>
     </Modal>
   </div>
 }
