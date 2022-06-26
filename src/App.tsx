@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import Checkout from './components/Checkout';
 import StartPage from './pages/StartPage';
+import Login from './components/Login';
+import useToken from './components/useToken';
 
 
 export type Purchase = {
@@ -16,20 +18,13 @@ export type Purchase = {
 
 function App() {
 
-  // const [sections, setSections] = React.useState(null);
-  // React.useEffect(() => {
-  //   client.get('/member/626').then((response) => {
-  //     //@ts-ignore
-  //    setSections(response.data)
-  //   })
-  // }, [])
-
-  // if (!sections) return null;
-  // console.log(sections)
-
-  // const properties = sections['properties']
+  const { token, setToken } = useToken();
 
   const [purchase, setPurchase] = useState<Purchase>({ articles: new Array<Article>(), customer: {} });
+
+  if(!token) {
+    return <Login setToken={setToken} />
+  }
 
   return (
     <div className="App">
