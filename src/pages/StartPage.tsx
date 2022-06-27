@@ -31,7 +31,7 @@ function StartPage(props: Props) {
               <Categories purchase={props.purchase} setPurchase={props.setPurchase} />
             </Grid>
             <Grid item xs={3} md={3}>
-              <Cart articles={props.purchase.articles} deleteItem={deleteItem} />
+              <Cart purchase={props.purchase} setPurchase={props.setPurchase} deleteItem={deleteItem} />
             </Grid>
           </Grid>
         </div>

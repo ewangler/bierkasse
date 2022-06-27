@@ -9,7 +9,8 @@ type Props = {
 
 function Calculator(props: Props) {
 
-  const [value, setValue] = useState<number>(0)
+  const [value, setValue] = useState<number>(1)
+  const [inital, setInitial] = useState<boolean>(true)
 
   const btnValues = [
     [7, 8, 9],
@@ -21,16 +22,18 @@ function Calculator(props: Props) {
   const numClickHandler = (e: any) => {
     e.preventDefault();
     const btnValue = e.currentTarget.value
-    if (value === 0) {
+    if (inital) {
       setValue(btnValue)
+      setInitial(false)
     } else {
       setValue(value + btnValue)
     }
   }
 
   const clearClickHandler = (e: any) => {
-    e.preventDefault();
-    setValue(0)
+    e.preventDefault()
+    setInitial(true)
+    setValue(1)
   }
 
   const okClickHandler = (e: any) => {

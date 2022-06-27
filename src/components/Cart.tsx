@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import { Article } from './Articles'
 import MemberCreate from './MemberCreate'
 import MemberSearch, { Member } from './MemberSearch'
 import Button from '@mui/material/Button'
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Alert, Avatar, Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, Modal } from '@mui/material'
+import { Alert, Box, List, Modal } from '@mui/material'
 import { Link } from 'react-router-dom'
+import CartArticleItem from './CartArticleItem'
+import Discount from './Discount'
+import { Purchase } from '../App'
 
 type Props = {
-  articles: Article[]
+  purchase: Purchase
+  setPurchase: any
   deleteItem: any
 }
 
@@ -26,35 +28,24 @@ const style = {
 
 function Cart(props: Props) {
 
+  const articles = props.purchase.articles
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [member, setMember] = useState<Member>()
 
   const vat = (price: number) => {
     const vatRate = 7.7
-    return price - price / (vatRate/100 + 1)
+    return price - price / (vatRate / 100 + 1)
   }
 
-  const articleList = props.articles.map((article) => {
-    return <ListItem key={article.properties.title}
-      secondaryAction={
-        <IconButton edge="end" aria-label="delete" onClick={(e) => props.deleteItem(article)}>
-          <DeleteIcon />
-        </IconButton>
-      }>
-      <ListItemAvatar>
-        <Avatar sx={{ bgcolor: '#1976d2', width: 27, height: 27 }}>
-          {article.properties.count}
-        </Avatar>
-      </ListItemAvatar>
-      <ListItemText>
-        {article.properties.description} ({article.properties.price}.-)
-      </ListItemText>
-    </ListItem>
+  const articleList = articles.map((article) => {
+    return <CartArticleItem article={article} deleteItem={props.deleteItem} />
   })
 
-  const totalPrice = props.articles.map((article) => {
+  const totalPrice = articles.map((article) => {
     return article.properties.price * (article.properties.count || 0)
-  }).reduce((x, y) => x + y, 0);
+  }).reduce((x, y) => x + y, 0)
+
+  const priceWithDiscount = totalPrice * ((props.purchase.discount || 100) / 100)
 
   return <div className='cart'>
     <h1>Warenkorb</h1>
@@ -67,7 +58,9 @@ function Cart(props: Props) {
     }
     <h4>zwischentotal inkl. MWSt: {totalPrice.toFixed(2)} CHF</h4>
     <h4>MWSt: {vat(totalPrice).toFixed(2)} CHF</h4>
-    <h3>total: {totalPrice.toFixed(2)} CHF</h3>
+    <h4>total: {totalPrice.toFixed(2)} CHF</h4>
+    <h4>Rabatt: {props.purchase.discount} %</h4>
+    <h3>total mit rabatt: {priceWithDiscount.toFixed(2)} CHF</h3>
 
     <Modal
       open={modalIsOpen}
@@ -81,9 +74,16 @@ function Cart(props: Props) {
       </Box>
     </Modal>
 
+    <hr />
+    <h3>Rabatt</h3>
+    <Discount purchase={props.purchase} setPurchase={props.setPurchase} />
+    <hr />
+    <h3>Kunde</h3>
     <MemberSearch setMember={setMember} member={member} />
     <Button variant='outlined' onClick={() => setModalIsOpen(true)}>Neu erfassen</Button>
-    <Link to='/checkout'>Checkout</Link>
+    <br />
+    <hr />
+    <Button component={Link} to='/checkout' variant='contained'>Checkout</Button>
   </div>
 }
 export default Cart

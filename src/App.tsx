@@ -14,13 +14,14 @@ import useToken from './components/useToken';
 export type Purchase = {
   articles: Article[]
   customer: any
+  discount: number | undefined
 }
 
 function App() {
 
   const { token, setToken } = useToken();
 
-  const [purchase, setPurchase] = useState<Purchase>({ articles: new Array<Article>(), customer: {} });
+  const [purchase, setPurchase] = useState<Purchase>({ articles: new Array<Article>(), customer: {}, discount: undefined});
 
   if(!token) {
     return <Login setToken={setToken} />

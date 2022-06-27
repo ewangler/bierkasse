@@ -38,7 +38,6 @@ function MemberSearch(props: Props) {
   }
 
   return <div className='member-search'>
-    Kunde: <br/>
     {props.member ?
       <>
       {props.member?.properties.Vorname} {props.member?.properties.Name}
@@ -47,7 +46,7 @@ function MemberSearch(props: Props) {
       :
       <form onSubmit={handleSubmit}>
         <input type="text" id="memberId" name="memberId" value={memberId} onChange={e => setMemberId(e.target.value)} />
-        <Button variant="contained" type="submit">Suchen</Button>
+        <Button variant="outlined" type="submit">Suchen</Button>
       </form>
     }
   </div>
