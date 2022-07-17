@@ -49,7 +49,7 @@ function Categories(props: Props) {
   const articleGroupElements = articleGroups.map((group) => {
     return <div key={group.properties.title}>
       <h2>{group.properties.title} ({group.children.article.length})</h2>
-      {/* <img src={require('../data/images/brauereiimberg_100.png')} alt="bild" onClick={() => setValue((group))}/> <br/> */}
+      <img src={require(`../data/images/${group.properties.title}.png`)} alt="bild" onClick={() => setValue((group))}/> <br/>
       <Button variant="outlined" onClick={() => setValue((group))}>auswählen</Button>
     </div>
   })

@@ -1,10 +1,12 @@
 import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 import React, { useState } from 'react'
+import { Purchase } from '../App'
 import client from '../client'
 
 type Props = {
-  setMember: any
-  member: Member | undefined
+  setPurchase: any
+  purchase: Purchase
 }
 
 export type Member = {
@@ -19,7 +21,7 @@ function MemberSearch(props: Props) {
 
   const deleteMember = (e: any) => {
     e.preventDefault();
-    props.setMember(undefined)
+    props.setPurchase({ ...props.purchase, customer: undefined })
   }
 
   const handleSubmit = (e: any) => {
@@ -31,21 +33,24 @@ function MemberSearch(props: Props) {
       if (memberArray.length > 0) {
         client.get(`/member/${memberArray[0]}`).then((memberResponse) => {
           const member = memberResponse.data
-          props.setMember(member)
+          props.setPurchase({ ...props.purchase, customer: member })
         })
       }
     })
   }
 
+  const member = props.purchase.customer
+
   return <div className='member-search'>
-    {props.member ?
+    {member ?
       <>
-      {props.member?.properties.Vorname} {props.member?.properties.Name}
+      {member?.properties.Vorname} {member?.properties.Name}
       <Button onClick={deleteMember}>X</Button>
       </>
       :
       <form onSubmit={handleSubmit}>
-        <input type="text" id="memberId" name="memberId" value={memberId} onChange={e => setMemberId(e.target.value)} />
+        <TextField size="small" type="text" id="memberId" name="memberId" value={memberId}
+         onChange={e => setMemberId(e.target.value)} />
         <Button variant="outlined" type="submit">Suchen</Button>
       </form>
     }

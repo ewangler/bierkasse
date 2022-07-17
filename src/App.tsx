@@ -21,9 +21,13 @@ function App() {
 
   const { token, setToken } = useToken();
 
-  const [purchase, setPurchase] = useState<Purchase>({ articles: new Array<Article>(), customer: {}, discount: undefined});
+  const [purchase, setPurchase] = useState<Purchase>({
+    articles: new Array<Article>(),
+    customer: undefined,
+    discount: undefined
+  });
 
-  if(!token) {
+  if (!token) {
     return <Login setToken={setToken} />
   }
 
@@ -31,8 +35,8 @@ function App() {
     <div className="App">
       <Router basename="/">
         <Routes>
-          <Route path="/" element={<StartPage purchase={purchase} setPurchase={setPurchase} />}/>
-          <Route path="/checkout" element={<Checkout purchase={purchase}/>}/>
+          <Route path="/" element={<StartPage purchase={purchase} setPurchase={setPurchase} />} />
+          <Route path="/checkout" element={<Checkout purchase={purchase} />} />
         </Routes>
       </Router>
     </div>

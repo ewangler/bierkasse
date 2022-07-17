@@ -1,3 +1,5 @@
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import React, { useState } from 'react';
 
@@ -44,17 +46,15 @@ export default function Login(props: Props) {
 
   return (
     <> {error}
+      <br />
       <form onSubmit={handleSubmit}>
-        <label>
-          <p>Benutzername</p>
-          <input type="text" onChange={e => setUserName(e.target.value)} />
-        </label>
-        <label>
-          <p>Passwort</p>
-          <input type="password" onChange={e => setPassword(e.target.value)} />
-        </label>
+        <TextField required variant="outlined" type="text" onChange={e => setUserName(e.target.value)} label='Benutzername' />
+        <br />
+        <br />
+        <TextField required variant="outlined" type="password" onChange={e => setPassword(e.target.value)} label='Passwort' />
         <div>
-          <button type="submit">Login</button>
+          <br />
+          <Button type="submit" variant='contained'>Login</Button>
         </div>
       </form>
     </>

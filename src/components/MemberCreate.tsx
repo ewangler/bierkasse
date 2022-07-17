@@ -1,10 +1,12 @@
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import React, { useState } from 'react'
+import { Purchase } from '../App'
 import client from '../client'
 
 type Props = {
-  setMember: any
+  setPurchase: any
+  purchase: Purchase
 }
 
 function MemberCreate(props: Props) {
@@ -30,7 +32,7 @@ function MemberCreate(props: Props) {
 
     client.post(`/member`, data).then((response) => {
       const responseData = response.data
-      props.setMember(responseData)
+      props.setPurchase({ ...props.purchase, customer: responseData })
       setSuccess(true)
     }).catch(() => {
       setSuccess(false)

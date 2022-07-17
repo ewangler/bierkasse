@@ -7,6 +7,7 @@ import { Purchase } from '../App';
 import client from '../client';
 import * as constants from '../service/constants'
 import CartArticleItem from './CartArticleItem';
+import CartArticleList from './CartArticleList';
 
 type Props = {
   purchase: Purchase | undefined
@@ -65,12 +66,18 @@ function Checkout(props: Props) {
   const articles = props.purchase.articles.map((article) => {
     return <CartArticleItem article={article} deleteItem={false} />
   })
+  const member = props.purchase.customer
 
   return <div className='checkout'>
+    <img src={require('../data/images/logo.png')} alt="bild"/> <br/>
     <h1>Checkout</h1>
     <List>
       {articles}
     </List>
+    <CartArticleList articles={props.purchase.articles} discount={props.purchase.discount}/>
+    {member?.properties.Vorname} {member?.properties.Name}, {member?.properties.Strasse}, {member?.properties.PLZ} {member?.properties.Ort}
+    <br/>
+    <br/>
     {success === true ?
       <Alert severity="success">Checkout erfolgreich</Alert> : (success === false) ? 
       <Alert severity="error">Checkout fehlgeschlagen</Alert> : <></>

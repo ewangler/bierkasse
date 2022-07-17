@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 import React, { useState } from 'react'
 import { Purchase } from '../App'
 
@@ -8,7 +9,7 @@ type Props = {
 }
 
 function Discount(props: Props) {
-  const [discount, setDiscount] = useState<number>(0)
+  const [discount, setDiscount] = useState<number>()
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -18,7 +19,9 @@ function Discount(props: Props) {
 
   return <div className='member-search'>
     <form onSubmit={handleSubmit}>
-      <input type="number" id="discount" name="discount" value={discount} onChange={e => setDiscount(Number(e.target.value))} />
+      <TextField size="small" type="number" id="discount" name="discount" value={discount}
+        onChange={e => setDiscount(Number(e.target.value))}
+      />
       <Button variant="outlined" type="submit">speichern</Button>
     </form>
   </div>
