@@ -26,7 +26,11 @@ function Categories(props: Props) {
     if (filter.length === 0) {
       articles.push(article)
     }
-    props.setPurchase({ ...props.purchase, articles: articles })
+    const totalPrice = articles.map((article) => {
+      return article.properties.price * (article.properties.count || 0)
+    }).reduce((x, y) => x + y, 0)
+
+    props.setPurchase({ ...props.purchase, articles: articles, total: totalPrice })
   }
 
   const [articleGroups, setArticleGroups] = React.useState<ArticleGroup[]>([])

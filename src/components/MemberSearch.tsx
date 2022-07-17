@@ -21,7 +21,7 @@ function MemberSearch(props: Props) {
 
   const deleteMember = (e: any) => {
     e.preventDefault();
-    props.setPurchase({ ...props.purchase, customer: undefined })
+    props.setPurchase({ ...props.purchase, customer: undefined, customerId: undefined })
   }
 
   const handleSubmit = (e: any) => {
@@ -31,9 +31,10 @@ function MemberSearch(props: Props) {
       const memberArray = response.data.objects
 
       if (memberArray.length > 0) {
+        console.log(props.purchase.customerId)
         client.get(`/member/${memberArray[0]}`).then((memberResponse) => {
           const member = memberResponse.data
-          props.setPurchase({ ...props.purchase, customer: member })
+          props.setPurchase({ ...props.purchase, customer: member, customerId: memberArray[0] })
         })
       }
     })
@@ -41,6 +42,7 @@ function MemberSearch(props: Props) {
 
   const member = props.purchase.customer
 
+  console.log(props.purchase.customerId)
   return <div className='member-search'>
     {member ?
       <>

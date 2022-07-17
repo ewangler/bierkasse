@@ -13,7 +13,9 @@ import useToken from './components/useToken';
 
 export type Purchase = {
   articles: Article[]
+  total: number
   customer: any
+  customerId: number | undefined
   discount: number | undefined
 }
 
@@ -24,7 +26,9 @@ function App() {
   const [purchase, setPurchase] = useState<Purchase>({
     articles: new Array<Article>(),
     customer: undefined,
-    discount: undefined
+    customerId: undefined,
+    discount: undefined,
+    total: 0
   });
 
   if (!token) {
@@ -36,7 +40,7 @@ function App() {
       <Router basename="/">
         <Routes>
           <Route path="/" element={<StartPage purchase={purchase} setPurchase={setPurchase} />} />
-          <Route path="/checkout" element={<Checkout purchase={purchase} />} />
+          <Route path="/checkout" element={<Checkout purchase={purchase} setPurchase={setPurchase} />} />
         </Routes>
       </Router>
     </div>
