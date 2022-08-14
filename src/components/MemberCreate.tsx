@@ -3,6 +3,7 @@ import Button from '@mui/material/Button'
 import React, { useState } from 'react'
 import { Purchase } from '../App'
 import client from '../client'
+import * as constants from '../service/constants'
 
 type Props = {
   setPurchase: any
@@ -21,7 +22,7 @@ function MemberCreate(props: Props) {
       "type": "member",
       "readonly": false,
       "parents": [
-        // 171
+        constants.MEMBER_PARENT
       ],
       "properties": {
         "Vorname": name,
@@ -32,8 +33,13 @@ function MemberCreate(props: Props) {
 
     client.post(`/member`, data).then((response) => {
       const responseData = response.data
-      props.setPurchase({ ...props.purchase, customer: responseData })
-      setSuccess(true)
+      client.get(`/member/${responseData}`).then((memberResponse) => {
+        const member = memberResponse.data
+        props.setPurchase({ ...props.purchase, customer: member })
+      }).then(() => {
+        setSuccess(true)
+      })
+
     }).catch(() => {
       setSuccess(false)
     })

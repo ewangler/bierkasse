@@ -45,7 +45,7 @@ function Cart(props: Props) {
         {articleList}
       </List>
     }
-    <CartArticleList articles={articles} discount={props.purchase.discount}/>
+    <CartArticleList articles={articles} discount={props.purchase.discount} />
 
     <Modal
       open={modalIsOpen}
@@ -56,6 +56,7 @@ function Cart(props: Props) {
     >
       <Box sx={style}>
         <MemberCreate purchase={props.purchase} setPurchase={props.setPurchase} />
+        <Button onClick={() => setModalIsOpen(false)}>schliessen</Button>
       </Box>
     </Modal>
 
@@ -64,9 +65,11 @@ function Cart(props: Props) {
     <Discount purchase={props.purchase} setPurchase={props.setPurchase} />
     <hr />
     <h3>Kunde</h3>
-    <MemberSearch setPurchase={props.setPurchase} purchase={props.purchase}  />
-    <Button variant='outlined' onClick={() => setModalIsOpen(true)}>Neu erfassen</Button>
-    <br />
+    <MemberSearch setPurchase={props.setPurchase} purchase={props.purchase} />
+    {!props.purchase.customer && (
+      <><Button variant='outlined' onClick={() => setModalIsOpen(true)}>Neu erfassen</Button>
+        <br /></>
+    )}
     <hr />
     <Button component={Link} to='/checkout' variant='contained'>Checkout</Button>
   </div>

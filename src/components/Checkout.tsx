@@ -31,6 +31,7 @@ const style = {
 function Checkout(props: Props) {
 
   const [success, setSuccess] = useState<boolean>()
+  const [creditSuccess, setCreditSuccess] = useState<boolean>()
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [amount, setAmount] = useState<number>()
 
@@ -46,24 +47,28 @@ function Checkout(props: Props) {
 
   const handleAddCreditSubmit = (e: any) => {
     e.preventDefault();
-    const totalAmount = (amount || 0) + parseInt(props.purchase?.customer.properties.Bierkredit)
+
+    console.log(props.purchase)
+    const totalAmount = (amount || 0) + parseInt((props.purchase?.customer.properties.Bierkredit) || 0)
     console.log(amount, props.purchase?.customer.properties.Bierkredit, totalAmount)
-    const amountData = {"properties": 
-      {"Bierkredit": totalAmount}
+    const amountData = {
+      "properties":
+        { "Bierkredit": totalAmount }
     }
     client.put(`/member/${props.purchase?.customerId}`, amountData).then((response) => {
-      const member = response.data
-      props.setPurchase({ ...props.purchase, customer: member })
-      setSuccess(true)
+      client.get(`/member/${props.purchase?.customerId}`).then((memberResponse) => {
+        const member = memberResponse.data
+        props.setPurchase({ ...props.purchase, customer: member })
+      })
     }).catch(() => {
-      setSuccess(false)
+      setCreditSuccess(false)
     })
 
     const entry = {
       "properties": {
         "amount": amount,
-        "title": 'Kredit aufladen',
-        "receipt": ''
+        "title": `Kredit aufladen - ${props.purchase?.customerId}`,
+        "receipt": props.purchase?.customerId
       },
       "links": {
         "debit": [constants.DEBIT_ACCOUNT],
@@ -73,7 +78,7 @@ function Checkout(props: Props) {
     const data = {
       "properties": {
         "date": new Date().toISOString().slice(0, 10),
-        "title": 'Kredit aufladen'
+        "title": `Kredit aufladen - ${props.purchase?.customerId}`
       },
       "children": {
         "entry": [entry]
@@ -82,10 +87,11 @@ function Checkout(props: Props) {
         constants.ACCOUNT_PARENT
       ]
     }
-    client.post(`/entrygroup`, data).then((response) => {
-      setSuccess(true)
+    client.post(`/entrygroup`, data).then(() => {
+      setCreditSuccess(true)
+      setModalIsOpen(false)
     }).catch(() => {
-      setSuccess(false)
+      setCreditSuccess(false)
     })
   }
 
@@ -102,8 +108,8 @@ function Checkout(props: Props) {
           "receipt": receipt
         },
         "links": {
-          "debit": constants.BEER_CREDIT,
-          "credit": constants.CREDIT_ACCOUNT
+          "debit": [constants.BEER_CREDIT],
+          "credit": [constants.CREDIT_ACCOUNT]
         }
       }
       const data = {
@@ -112,7 +118,7 @@ function Checkout(props: Props) {
           "title": title
         },
         "children": {
-          "entry": entry
+          "entry": [entry]
         },
         "parents": [
           constants.ACCOUNT_PARENT
@@ -121,7 +127,22 @@ function Checkout(props: Props) {
       client.post(`/entrygroup`, data).then((response) => {
         // const responseData = response.data
         // props.setMember(responseData)
-        setSuccess(true)
+        const totalAmount = props.purchase?.customer.properties.Bierkredit - article.properties.price
+        const amountData = {
+          "properties":
+            { "Bierkredit": totalAmount }
+        }
+        client.put(`/member/${props.purchase?.customerId}`, amountData).then(() => {
+          client.get(`/member/${props.purchase?.customerId}`).then((memberResponse) => {
+            const member = memberResponse.data
+            props.setPurchase({ ...props.purchase, customer: member })
+            setSuccess(true)
+          }).catch(() => {
+            setSuccess(false)
+          })
+        }).catch(() => {
+          setSuccess(false)
+        })
       }).catch(() => {
         setSuccess(false)
       })
@@ -141,6 +162,7 @@ function Checkout(props: Props) {
     {member && <>
       {member?.properties.Vorname} {member?.properties.Name}, ({member?.properties.Strasse}, {member?.properties.PLZ} {member?.properties.Ort}), Bierkredit: {member?.properties.Bierkredit} CHF
       <Button onClick={addCredit}>aufladen</Button>
+      {creditSuccess === true ? <Alert severity="success">Aufladen erfolgreich</Alert> : <></> }
       <hr />
     </>
     }
@@ -167,13 +189,17 @@ function Checkout(props: Props) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        Kredit aufladen für: {member?.properties.Vorname} {member?.properties.Name} 
+        Kredit aufladen für: {member?.properties.Vorname} {member?.properties.Name}
         <form onSubmit={handleAddCreditSubmit}>
-        <br/>
+          <br />
           <TextField label='Betrag' required size="small" type="number" id="amount" name="amount" value={amount}
             onChange={e => setAmount(Number(e.target.value))}
           />
           <Button variant="outlined" type="submit">aufladen</Button>
+
+          {success === false ?
+              <Alert severity="error">Aufladen fehlgeschlagen</Alert> : <></>
+          }
         </form>
       </Box>
     </Modal>

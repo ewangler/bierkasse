@@ -27,35 +27,40 @@ function MemberSearch(props: Props) {
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
-    client.get(`/member?filter=\`ID\`="${memberId}"`).then((response) => {
+    client.get(`/member?filter=\`ID\`="${memberId}" OR \`Name\`="${memberId}"`).then((response) => {
       const memberArray = response.data.objects
 
-      if (memberArray.length > 0) {
-        console.log(props.purchase.customerId)
+      if (memberArray.length === 1) {
         client.get(`/member/${memberArray[0]}`).then((memberResponse) => {
           const member = memberResponse.data
           props.setPurchase({ ...props.purchase, customer: member, customerId: memberArray[0] })
         })
+      } else if(memberArray.length > 1) {
+        alert('Mehrere Resultate gefunden, bitte einschränken')
+      } else {
+        alert('Keine Resultate gefunden')
       }
     })
   }
 
   const member = props.purchase.customer
+  console.log('asdf', member)
 
-  console.log(props.purchase.customerId)
-  return <div className='member-search'>
-    {member ?
-      <>
-      {member?.properties.Vorname} {member?.properties.Name}
-      <Button onClick={deleteMember}>X</Button>
-      </>
-      :
-      <form onSubmit={handleSubmit}>
-        <TextField size="small" type="text" id="memberId" name="memberId" value={memberId}
-         onChange={e => setMemberId(e.target.value)} />
-        <Button variant="outlined" type="submit">Suchen</Button>
-      </form>
-    }
-  </div>
+  return <>
+    <div className='member-search'>
+      {member ?
+        <>
+          {member?.properties.Vorname} {member?.properties.Name} ({member?.properties.Bierkredit} CHF)
+          <Button onClick={deleteMember}>X</Button>
+        </>
+        :
+        <form onSubmit={handleSubmit}>
+          <TextField size="small" type="text" id="memberId" name="memberId" value={memberId}
+            onChange={e => setMemberId(e.target.value)} placeholder="ID / Nachname"/>
+          <Button variant="outlined" type="submit">Suchen</Button>
+        </form>
+      }
+    </div>
+  </>
 }
 export default MemberSearch
