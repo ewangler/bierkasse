@@ -33,7 +33,7 @@ function Cart(props: Props) {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   const articleList = articles.map((article) => {
-    return <CartArticleItem article={article} deleteItem={props.deleteItem} />
+    return <CartArticleItem key={article.properties.description} article={article} deleteItem={props.deleteItem} />
   })
 
   return <div className='cart'>

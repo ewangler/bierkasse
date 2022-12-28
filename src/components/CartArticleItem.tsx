@@ -16,7 +16,7 @@ function CartArticleItem(props: Props) {
 
   const article = props.article
 
-  return <ListItem key={article.properties.title}
+  return <ListItem key={article.properties.description}
   secondaryAction={
     props.deleteItem ? 
     <IconButton edge="end" aria-label="delete" onClick={(e) => props.deleteItem(article)}>

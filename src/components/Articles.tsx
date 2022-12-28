@@ -27,7 +27,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 700,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -44,7 +44,7 @@ function Articles(props: Props) {
   React.useEffect(() => {
     setArticles([])
 
-    props.group?.children.article.map((articleId: number) => {
+    props.group?.children?.article?.map((articleId: number) => {
       return client.get(`/article/${articleId}`).then((response) => {
         const article = response.data
         // @ts-ignore
@@ -72,7 +72,11 @@ function Articles(props: Props) {
     }
   }
 
-  const articleElements = articles.map((article) => {
+  function compareArticles(a: Article, b: Article) {
+    return a.properties.description > b.properties.description ? 1 : -1;
+  }
+
+  const articleElements = articles.sort(compareArticles).map((article) => {
     return <Grid item sm={5} md={5}>
       <div key={article.properties.title} className="article-item col">
         <Button variant="contained" onClick={() => openModal(article)} className="select-article">

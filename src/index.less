@@ -16,6 +16,21 @@ body {
 
   .categories {
     flex-grow: 2;
+
+    .header {
+      display: flex;
+
+      h1 {
+        margin-left: 40%;
+        text-decoration: underline;
+        font-size: 2.1rem;
+      }
+    }
+
+    .back {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
   }
 }
 
@@ -49,24 +64,28 @@ body {
   .screen {
     border: 1px solid #1976d2;
     font-weight: bold;
-    font-size: 30px;
+    font-size: 40px;
     text-align: center;
     height: 40px;
     margin: 10px 0;
     padding: 5px;
   }
 
+  .numberpad button {
+    font-size: 2rem;
+  }
+
 }
 
 .flex-grid-3 {
   display: grid;
-  gap: 1px;
+  gap: 13px;
   grid-template-columns: repeat(3, 1fr);
 }
 
 .flex-grid-4 {
   display: grid;
-  gap: 1px;
+  gap: 3px;
   grid-template-columns: repeat(4, 1fr);
 }
 

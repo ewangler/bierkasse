@@ -17,6 +17,10 @@ function CartArticleList(props: Props) {
     return article.properties.price * (article.properties.count || 0)
   }).reduce((x, y) => x + y, 0)
 
+  const totalCount = props.articles.map((article) => {
+    return article.properties.count || 0
+  }).reduce((x, y) => x + y, 0)
+
   const vat = (price: number) => {
     const vatRate = 7.7
     return price - price / (vatRate / 100 + 1)
@@ -34,6 +38,7 @@ function CartArticleList(props: Props) {
   }
 
   const rows = [
+    createData(totalCount.toString(), 'Total', '', 'head'),
     createData('Zwischentotal inkl. MWSt', totalPrice.toFixed(2), 'CHF', 'body'),
     createData('MWST', vat(totalPrice).toFixed(2), 'CHF', 'body'),
     createData('Total', totalPrice.toFixed(2), 'CHF', 'body'),
@@ -50,7 +55,7 @@ function CartArticleList(props: Props) {
         {gaga.map((row) => (
           <TableRow
             key={row.name}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 }, '&:first-child th': { 'font-size': '1.5rem', color: '#1976d2'} }}
           >
             <TableCell component="th" scope="row" variant={row.variant}>
               {row.name}

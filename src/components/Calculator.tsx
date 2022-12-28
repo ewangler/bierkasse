@@ -50,7 +50,7 @@ function Calculator(props: Props) {
         {btnValues.flat().map((btn, i) => {
           return (
             <Button
-              variant={btn === "ok" || btn === 'C' ? 'contained' : 'outlined'}
+              variant={btn === "ok" || btn === 'C' ? 'outlined' : 'contained'}
               key={i}
               className={btn === "ok" ? "ok" : btn === 'C' ? 'clear' : ""}
               value={btn}
