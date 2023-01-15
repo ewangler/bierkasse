@@ -98,3 +98,16 @@ body {
   padding-left: 20px;
   border-left: #adadad 1px solid;
 }
+
+#quittung-title {
+  display: none;
+}
+
+@media print {
+  #checkout, #quittung, #back, #checkout-title {
+    display: none;
+  }
+  #quittung-title {
+    display: block;
+  }
+}

@@ -55,7 +55,7 @@ function CartArticleList(props: Props) {
         {gaga.map((row) => (
           <TableRow
             key={row.name}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 }, '&:first-child th': { 'font-size': '1.5rem', color: '#1976d2'} }}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 }, '&:first-of-type th': { 'fontSize': '1.5rem', color: '#1976d2'} }}
           >
             <TableCell component="th" scope="row" variant={row.variant}>
               {row.name}
