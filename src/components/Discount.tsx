@@ -1,20 +1,15 @@
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import React, { useState } from 'react'
-import { Purchase } from '../App'
+import React from 'react'
+import { useCartContext } from '../contexts/CartContextProvider'
 
-type Props = {
-  setPurchase: any
-  purchase: Purchase
-}
-
-function Discount(props: Props) {
-  const [discount, setDiscount] = useState<number>()
+function Discount() {
+  const { discount, setDiscount}  = useCartContext()
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
-    props.setPurchase({ ...props.purchase, discount: discount })
+    // props.setPurchase({ ...props.purchase, discount: discount })
   }
 
   return <div className='member-search'>

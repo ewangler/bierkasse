@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Article } from './Articles'
 import Button from '@mui/material/Button'
+import { Article } from '../models'
 
 type Props = {
   closeModal: any

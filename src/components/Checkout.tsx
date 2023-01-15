@@ -6,16 +6,12 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
-import { Purchase } from '../App';
 import client from '../client';
+import { useCartContext } from '../contexts/CartContextProvider';
+import useCart from '../contexts/useCart';
 import * as constants from '../service/constants'
 import CartArticleItem from './CartArticleItem';
 import CartArticleList from './CartArticleList';
-
-type Props = {
-  purchase: Purchase | undefined
-  setPurchase: any
-}
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -28,12 +24,16 @@ const style = {
   p: 4,
 };
 
-function Checkout(props: Props) {
+function Checkout() {
 
   const [success, setSuccess] = useState<boolean>()
   const [creditSuccess, setCreditSuccess] = useState<boolean>()
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [amount, setAmount] = useState<number>()
+
+  const { customer, setCustomer } = useCartContext();
+  const { articles } = useCart();
+  const customerId = customer?.customerId
 
   const invoice = (e: any) => {
     e.preventDefault();
@@ -48,27 +48,27 @@ function Checkout(props: Props) {
   const handleAddCreditSubmit = (e: any) => {
     e.preventDefault();
 
-    console.log(props.purchase)
-    const totalAmount = (amount || 0) + parseInt((props.purchase?.customer.properties.Bierkredit) || 0)
-    console.log(amount, props.purchase?.customer.properties.Bierkredit, totalAmount)
-    const amountData = {
-      "properties":
-        { "Bierkredit": totalAmount }
-    }
-    client.put(`/member/${props.purchase?.customerId}`, amountData).then((response) => {
-      client.get(`/member/${props.purchase?.customerId}`).then((memberResponse) => {
-        const member = memberResponse.data
-        props.setPurchase({ ...props.purchase, customer: member })
+    if (customer) {
+      const totalAmount = (amount || 0) + parseInt((customer.properties.Bierkredit) || '0')
+      const amountData = {
+        "properties":
+          { "Bierkredit": totalAmount }
+      }
+      client.put(`/member/${customerId}`, amountData).then((response) => {
+        client.get(`/member/${customerId}`).then((memberResponse) => {
+          const member = memberResponse.data
+          setCustomer(member)
+        })
+      }).catch(() => {
+        setCreditSuccess(false)
       })
-    }).catch(() => {
-      setCreditSuccess(false)
-    })
+    }
 
     const entry = {
       "properties": {
         "amount": amount,
-        "title": `Kredit aufladen - ${props.purchase?.customerId}`,
-        "receipt": props.purchase?.customerId
+        "title": `Kredit aufladen - ${customerId}`,
+        "receipt": customerId
       },
       "links": {
         "debit": [constants.DEBIT_ACCOUNT],
@@ -78,7 +78,7 @@ function Checkout(props: Props) {
     const data = {
       "properties": {
         "date": new Date().toISOString().slice(0, 10),
-        "title": `Kredit aufladen - ${props.purchase?.customerId}`
+        "title": `Kredit aufladen - ${customerId}`
       },
       "children": {
         "entry": [entry]
@@ -98,8 +98,8 @@ function Checkout(props: Props) {
   const checkout = (e: any) => {
     e.preventDefault();
 
-    props.purchase?.articles.forEach((article) => {
-      const title = `${article.properties.count} - ${article.properties.title} - ${article.properties.description}`
+    articles.forEach((article) => {
+      const title = `${article.quantity} - ${article.properties.title} - ${article.properties.description}`
       const receipt = ''
       const entry = {
         "properties": {
@@ -127,15 +127,17 @@ function Checkout(props: Props) {
       client.post(`/entrygroup`, data).then((response) => {
         // const responseData = response.data
         // props.setMember(responseData)
-        const totalAmount = props.purchase?.customer.properties.Bierkredit - article.properties.price
+        if (!customer) return 
+
+        const totalAmount = parseInt(customer.properties.Bierkredit || '0') - article.properties.price
         const amountData = {
           "properties":
             { "Bierkredit": totalAmount }
         }
-        client.put(`/member/${props.purchase?.customerId}`, amountData).then(() => {
-          client.get(`/member/${props.purchase?.customerId}`).then((memberResponse) => {
+        client.put(`/member/${customerId}`, amountData).then(() => {
+          client.get(`/member/${customerId}`).then((memberResponse) => {
             const member = memberResponse.data
-            props.setPurchase({ ...props.purchase, customer: member })
+            // props.setPurchase({ ...props.purchase, customer: member }) #TODO
             setSuccess(true)
           }).catch(() => {
             setSuccess(false)
@@ -149,12 +151,10 @@ function Checkout(props: Props) {
     })
   }
 
-  if (!props.purchase) return <></>
-
-  const articles = props.purchase.articles.map((article) => {
+  const articleItems = articles.map((article) => {
     return <CartArticleItem article={article} deleteItem={false} />
   })
-  const member = props.purchase.customer
+  const member = customer
 
   return <div className='checkout'>
     <img src={require('../data/images/logo.png')} alt="bild" /> <br />
@@ -167,9 +167,9 @@ function Checkout(props: Props) {
     </>
     }
     <List>
-      {articles}
+      {articleItems}
     </List>
-    <CartArticleList articles={props.purchase.articles} discount={props.purchase.discount} />
+    <CartArticleList />
 
     <br />
     <br />

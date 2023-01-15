@@ -1,20 +1,18 @@
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import React, { useState } from 'react'
-import { Purchase } from '../App'
 import client from '../client'
+import { useCartContext } from '../contexts/CartContextProvider'
 import * as constants from '../service/constants'
 
-type Props = {
-  setPurchase: any
-  purchase: Purchase
-}
 
-function MemberCreate(props: Props) {
+function MemberCreate() {
   const [success, setSuccess] = useState<boolean>()
   const [name, setName] = useState<string>()
   const [lastName, setLastName] = useState<string>()
   const [mail, setMail] = useState<string>()
+
+  const { setCustomer } = useCartContext()
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -35,7 +33,7 @@ function MemberCreate(props: Props) {
       const responseData = response.data
       client.get(`/member/${responseData}`).then((memberResponse) => {
         const member = memberResponse.data
-        props.setPurchase({ ...props.purchase, customer: member })
+        setCustomer(member)
       }).then(() => {
         setSuccess(true)
       })

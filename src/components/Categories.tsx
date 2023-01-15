@@ -1,40 +1,15 @@
 import React from 'react'
-import Articles, { Article } from './Articles'
-import { Purchase } from '../App'
 import client from '../client'
 import Button from '@mui/material/Button';
+import { ArticleGroup } from '../models';
+import Articles from './Articles';
 
-type Props = {
-  setPurchase: any
-  purchase: Purchase
-}
 
-export type ArticleGroup = {
-  properties: {
-    title: string
-  }
-  children: {
-    article: number[]
-  }
-}
+function Categories() {
 
-function Categories(props: Props) {
 
   function compareGroups(a: ArticleGroup, b: ArticleGroup) {
     return a.properties.title > b.properties.title ? 1 : -1;
-  }
-
-  function selectArticle(article: Article) {
-    let articles = props.purchase.articles
-    const filter = articles.filter((a) => a.properties.description === article.properties.description)
-    if (filter.length === 0) {
-      articles.push(article)
-    }
-    const totalPrice = articles.map((article) => {
-      return article.properties.price * (article.properties.count || 0)
-    }).reduce((x, y) => x + y, 0)
-
-    props.setPurchase({ ...props.purchase, articles: articles, total: totalPrice })
   }
 
   const [articleGroups, setArticleGroups] = React.useState<ArticleGroup[]>([])
@@ -71,7 +46,7 @@ function Categories(props: Props) {
           <Button className='back' variant="outlined" onClick={() => setValue(undefined)}>{"zurück"}</Button>
           <h1>{value.properties.title}</h1>
         </div>
-        <Articles group={value} selectArticle={selectArticle} />
+        <Articles group={value} />
       </>
       :
       <div className='flex-grid-3'>{articleGroupElements}</div>

@@ -6,14 +6,9 @@ import { Alert, Box, List, Modal } from '@mui/material'
 import { Link } from 'react-router-dom'
 import CartArticleItem from './CartArticleItem'
 import Discount from './Discount'
-import { Purchase } from '../App'
 import CartArticleList from './CartArticleList'
-
-type Props = {
-  purchase: Purchase
-  setPurchase: any
-  deleteItem: any
-}
+import useCart from '../contexts/useCart'
+import { useCartContext } from '../contexts/CartContextProvider'
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -27,13 +22,13 @@ const style = {
   p: 4,
 };
 
-function Cart(props: Props) {
-
-  const articles = props.purchase.articles
+function Cart() {
+  const { articles } = useCart();
+  const { customer } = useCartContext();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   const articleList = articles.map((article) => {
-    return <CartArticleItem key={article.properties.description} article={article} deleteItem={props.deleteItem} />
+    return <CartArticleItem key={article.properties.description} article={article} deleteItem={true} />
   })
 
   return <div className='cart'>
@@ -45,7 +40,7 @@ function Cart(props: Props) {
         {articleList}
       </List>
     }
-    <CartArticleList articles={articles} discount={props.purchase.discount} />
+    <CartArticleList />
 
     <Modal
       open={modalIsOpen}
@@ -55,18 +50,18 @@ function Cart(props: Props) {
       className='member-create-modal'
     >
       <Box sx={style}>
-        <MemberCreate purchase={props.purchase} setPurchase={props.setPurchase} />
+        <MemberCreate />
         <Button onClick={() => setModalIsOpen(false)}>schliessen</Button>
       </Box>
     </Modal>
 
     <hr />
     <h3>Rabatt</h3>
-    <Discount purchase={props.purchase} setPurchase={props.setPurchase} />
+    <Discount />
     <hr />
     <h3>Kunde</h3>
-    <MemberSearch setPurchase={props.setPurchase} purchase={props.purchase} />
-    {!props.purchase.customer && (
+    <MemberSearch />
+    {!customer && (
       <><Button variant='outlined' onClick={() => setModalIsOpen(true)}>Neu erfassen</Button>
         <br /></>
     )}

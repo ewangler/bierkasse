@@ -1,26 +1,17 @@
 import React, { useState } from 'react'
-import { ArticleGroup } from './Categories'
 import Calculator from './Calculator'
 import client from '../client'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
+import { Article, ArticleGroup, CartArticle } from '../models'
+import useCart from '../contexts/useCart'
 
 type Props = {
   group: ArticleGroup | undefined
-  selectArticle: any
+  // selectArticle: any
 }
-
-export type Article = {
-  properties: {
-    title: string
-    description: string
-    price: number
-    count?: number
-  }
-}
-
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -35,11 +26,17 @@ const style = {
 
 function Articles(props: Props) {
   const [articles, setArticles] = useState<Article[]>([])
-  const [currentArticle, setCurrentArticle] = useState<Article>()
+  const [currentArticle, setCurrentArticle] = useState<CartArticle>()
 
+  const { addArticle } = useCart();
 
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
+  function selectArticle(article: CartArticle, count: number) {
+    const copy = { ...article }
+    copy.quantity = count
+    addArticle(copy)
+  }
 
   React.useEffect(() => {
     setArticles([])
@@ -55,20 +52,15 @@ function Articles(props: Props) {
 
   if (!props.group && !articles) return <></>
 
-  const openModal = (article: Article) => {
+  const openModal = (article: CartArticle) => {
     setModalIsOpen(true)
     setCurrentArticle(article)
   }
 
-  const closeModal = (count: number) => {
+  const closeModal = (count: any) => {
     setModalIsOpen(false)
     if (currentArticle) {
-      if (currentArticle.properties.count) {
-        currentArticle.properties.count += Number(count)
-      } else {
-        currentArticle.properties.count = Number(count)
-      }
-      props.selectArticle(currentArticle)
+      selectArticle(currentArticle, parseInt(count))
     }
   }
 
@@ -79,7 +71,7 @@ function Articles(props: Props) {
   const articleElements = articles.sort(compareArticles).map((article) => {
     return <Grid item sm={5} md={5}>
       <div key={article.properties.title} className="article-item col">
-        <Button variant="contained" onClick={() => openModal(article)} className="select-article">
+        <Button variant="contained" onClick={() => openModal(article as CartArticle)} className="select-article">
           {article.properties.description}: {article.properties.price.toFixed(2)}
         </Button>
       </div>

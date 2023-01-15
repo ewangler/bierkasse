@@ -4,9 +4,8 @@ import Grid from '@mui/material/Grid'
 import Modal from '@mui/material/Modal'
 import TextField from '@mui/material/TextField'
 import React, { useState } from 'react'
-import { Purchase } from '../App'
 import client from '../client'
-import { Member } from './MemberSearch'
+import { Member } from '../models'
 
 type Props = {
   setPurchase: any
@@ -30,7 +29,6 @@ function MemberSearchResult(props: Props) {
     </Grid>
   })
 
-  console.log('gadadfsadf')
   return <>
     <Modal
       open={modalIsOpen}
