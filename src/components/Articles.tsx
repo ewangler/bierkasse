@@ -7,6 +7,7 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import { Article, ArticleGroup, CartArticle } from '../models'
 import useCart from '../contexts/useCart'
+import ImageButton from './ImageButton'
 
 type Props = {
   group: ArticleGroup | undefined
@@ -23,6 +24,14 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+
+const imageTable = {
+  ZwergimBerg: "'./images/articles/zwerg.png'",
+  Biraffe: "'./images/articles/biraffe.png'",
+}
+
+// @ts-ignore
+const imageMapper = (beer: string) => imageTable[beer] || ""
 
 function Articles(props: Props) {
   const [articles, setArticles] = useState<Article[]>([])
@@ -70,11 +79,16 @@ function Articles(props: Props) {
 
   const articleElements = articles.sort(compareArticles).map((article) => {
     return <Grid item sm={5} md={5}>
-      <div key={article.properties.title} className="article-item col">
+      {/* <div key={article.properties.title} className="article-item col">
         <Button variant="contained" onClick={() => openModal(article as CartArticle)} className="select-article">
           {article.properties.description}: {article.properties.price.toFixed(2)}
         </Button>
-      </div>
+      </div> */}
+      <ImageButton 
+        onClick={() => openModal(article as CartArticle)}
+        imgUrl={imageMapper(article.properties.description.replaceAll(' ', ''))}
+        key={article.properties.description} 
+        text={`${article.properties.description}: ${article.properties.price.toFixed(2)}`} />
     </Grid>
   })
 
