@@ -36,7 +36,7 @@ const useCartArticles = () => {
     }
 
     setArticles(updatedArticles);
-    // updateCartTotal(updatedArticles);
+    updateCartTotal(updatedArticles);
   };
 
   const removeArticle = (articleToRemove: CartArticle) => {

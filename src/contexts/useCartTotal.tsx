@@ -12,11 +12,13 @@ const useCartTotal = () => {
       },
       0
     );
-
-    const totalPrice = articles.reduce((sum: number, article: CartArticle) => {
+    
+    const t = articles.reduce((sum: number, article: CartArticle) => {
       sum += article.properties.price * article.quantity;
       return sum;
     }, 0);
+
+    const totalPrice = (Math.ceil(t*20)/20)
 
     const total = {
       articleQuantity,

@@ -10,22 +10,14 @@ import { useCartContext } from '../contexts/CartContextProvider';
 function CartArticleList() {
 
   const { discount } = useCartContext();
-  const { articles } = useCart();
-
-  const totalPrice = articles.map((article) => {
-    return article.properties.price * (article.quantity || 0)
-  }).reduce((x, y) => x + y, 0)
-
-  const totalCount = articles.map((article) => {
-    return article.quantity || 0
-  }).reduce((x, y) => x + y, 0)
+  const { total } = useCart();
 
   const vat = (price: number) => {
     const vatRate = 7.7
     return price - price / (vatRate / 100 + 1)
   }
 
-  const priceWithDiscount = totalPrice - (totalPrice * ((discount || 100) / 100))
+  const priceWithDiscount = total.totalPrice - (total.totalPrice * ((discount || 100) / 100))
 
   function createData(
     name: string,
@@ -37,21 +29,21 @@ function CartArticleList() {
   }
 
   const rows = [
-    createData(totalCount.toString(), 'Total', '', 'head'),
-    createData('Zwischentotal inkl. MWSt', totalPrice.toFixed(2), 'CHF', 'body'),
-    createData('MWST', vat(totalPrice).toFixed(2), 'CHF', 'body'),
-    createData('Total', totalPrice.toFixed(2), 'CHF', 'body'),
+    createData(total.articleQuantity.toString(), 'Total', '', 'head'),
+    createData('Zwischentotal inkl. MWSt', total.totalPrice.toFixed(2), 'CHF', 'body'),
+    createData('MWST', vat(total.totalPrice).toFixed(2), 'CHF', 'body'),
+    createData('Total', total.totalPrice.toFixed(2), 'CHF', 'body'),
     createData('Rabatt', discount, '%', 'body'),
     createData('Total mit Rabatt', priceWithDiscount.toFixed(2), 'CHF', 'head'),
   ]
-  const gaga = rows.filter((a: any) => {
+  const filteredRows = rows.filter((a: any) => {
     return a.value !== undefined && a.value !== '0.00'
   })
 
   return <TableContainer>
     <Table aria-label="simple table">
       <TableBody>
-        {gaga.map((row) => (
+        {filteredRows.map((row) => (
           <TableRow
             key={row.name}
             sx={{ '&:last-child td, &:last-child th': { border: 0 }, '&:first-of-type th': { 'fontSize': '1.5rem', color: '#1976d2'} }}
