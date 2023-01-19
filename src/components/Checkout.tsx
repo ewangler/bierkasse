@@ -5,10 +5,11 @@ import List from '@mui/material/List';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import client from '../client';
 import { useCartContext } from '../contexts/CartContextProvider';
 import useCart from '../contexts/useCart';
+import { Member } from '../models';
 import * as constants from '../service/constants'
 import CartArticleItem from './CartArticleItem';
 import CartArticleList from './CartArticleList';
@@ -31,8 +32,8 @@ function Checkout() {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [amount, setAmount] = useState<number>()
 
-  const { customer, setCustomer } = useCartContext();
-  const { articles } = useCart();
+  const { customer, setCustomer, setArticles, setTotal } = useCartContext();
+  const { articles, total } = useCart();
   const customerId = customer?.customerId
 
   const invoice = (e: any) => {
@@ -49,7 +50,7 @@ function Checkout() {
     e.preventDefault();
 
     if (customer) {
-      const totalAmount = (amount || 0) + parseInt((customer.properties.Bierkredit) || '0')
+      const totalAmount = (amount || 0) + parseFloat((customer.properties.Bierkredit) || '0')
       const amountData = {
         "properties":
           { "Bierkredit": totalAmount }
@@ -95,6 +96,21 @@ function Checkout() {
     })
   }
 
+  const navigate = useNavigate();
+  const redirect = () => {
+    //@ts-ignore
+    navigate('/', { replace: true });
+    setCustomer(undefined)
+  }
+
+  const finish = () => {
+    setSuccess(true)
+    setArticles([])
+    setTotal({ articleQuantity: 0, totalPrice: 0 })
+    setTimeout(redirect, 2000)
+    return
+  }
+
   const checkout = (e: any) => {
     e.preventDefault();
 
@@ -103,7 +119,7 @@ function Checkout() {
       const receipt = ''
       const entry = {
         "properties": {
-          "amount": article.properties.price,
+          "amount": article.properties.price * article.quantity,
           "title": title,
           "receipt": receipt
         },
@@ -127,27 +143,33 @@ function Checkout() {
       client.post(`/entrygroup`, data).then((response) => {
         // const responseData = response.data
         // props.setMember(responseData)
-        if (!customer) return 
-
-        const totalAmount = parseInt(customer.properties.Bierkredit || '0') - article.properties.price
-        const amountData = {
-          "properties":
-            { "Bierkredit": totalAmount }
-        }
-        client.put(`/member/${customerId}`, amountData).then(() => {
-          client.get(`/member/${customerId}`).then((memberResponse) => {
-            const member = memberResponse.data
-            // props.setPurchase({ ...props.purchase, customer: member }) #TODO
-            setSuccess(true)
-          }).catch(() => {
-            setSuccess(false)
-          })
-        }).catch(() => {
-          setSuccess(false)
-        })
+        
       }).catch(() => {
         setSuccess(false)
       })
+    })
+
+    if (!customer) {
+      finish()
+      return
+    }
+
+    const totalAmount = parseFloat(customer.properties.Bierkredit || '0') - total.totalPrice
+    const amountData = {
+      "properties":
+        { "Bierkredit": totalAmount }
+    }
+    client.put(`/member/${customerId}`, amountData).then(() => {
+      client.get(`/member/${customerId}`).then((memberResponse) => {
+        const member = memberResponse.data
+        // props.setPurchase({ ...props.purchase, customer: member }) #TODO
+        setCustomer(member)
+        finish()
+      }).catch(() => {
+        setSuccess(false)
+      })
+    }).catch(() => {
+      setSuccess(false)
     })
   }
 
@@ -156,29 +178,45 @@ function Checkout() {
   })
   const member = customer
 
+  const memberLine = (member: Member) => {
+    const credit = parseFloat(member.properties.Bierkredit || '0')
+    const creditNew = credit - total.totalPrice
+
+    return <>
+      <p>{member?.properties.Vorname} {member?.properties.Name} ({credit} CHF)
+      </p>
+      <p>
+        Bierkredit neu: <span className={creditNew < 0 ? 'credit-negative' : 'credit-ok'}>{creditNew} CHF</span>
+        <Button onClick={addCredit}>aufladen</Button>
+      </p>
+    </>
+  }
+
   return <div className='checkout'>
     <img src={require('../data/images/logo.png')} alt="bild" /> <br />
     <h1>Checkout</h1>
-    {member && <>
-      {member?.properties.Vorname} {member?.properties.Name}, ({member?.properties.Strasse}, {member?.properties.PLZ} {member?.properties.Ort}), Bierkredit: {member?.properties.Bierkredit} CHF
-      <Button onClick={addCredit}>aufladen</Button>
-      {creditSuccess === true ? <Alert severity="success">Aufladen erfolgreich</Alert> : <></> }
-      <hr />
-    </>
-    }
+  
     <List>
       {articleItems}
     </List>
     <CartArticleList />
-
+    {member && <>
+      <hr />
+      {memberLine(member)}
+      {/* {member?.properties.Vorname} {member?.properties.Name}, ({member?.properties.Strasse}, {member?.properties.PLZ} {member?.properties.Ort}), Bierkredit: {member?.properties.Bierkredit} CHF */}
+      {creditSuccess === true ? <Alert severity="success">Aufladen erfolgreich</Alert> : <></> }
+      <hr />
+    </>
+    }
     <br />
     <br />
     {success === true ?
-      <Alert severity="success">Checkout erfolgreich</Alert> : (success === false) ?
+      <Alert severity="success">Checkout erfolgreich! Neuer Saldo: {member?.properties.Bierkredit}</Alert> : (success === false) ?
         <Alert severity="error">Checkout fehlgeschlagen</Alert> : <></>
     }
     <Button onClick={checkout} variant='contained'>checkout</Button>
     <Button onClick={invoice}>Quittung</Button>
+    <br />
     <br />
     <Link to='/'>zurück</Link>
 

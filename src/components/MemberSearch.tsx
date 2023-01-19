@@ -24,7 +24,8 @@ function MemberSearch() {
 
     memberIds.map((id: number) => {
       return client.get(`/member/${id}`).then((response) => {
-        const member = response.data
+        let member = response.data
+        member.customerId = id
         // @ts-ignore
         setMemberArray(existing => [...existing, member]);
       })
@@ -37,9 +38,9 @@ function MemberSearch() {
   }
 
   const memberElements = memberArray?.map((member) => {
-    return <Grid item sm={5} md={5}>
+    return <Grid item md={9}>
       <div key={member.properties.Vorname} className="member-item col">
-        {member.properties.Vorname} {member.properties.Name} <Button onClick={() => selectMember(member)}>auswählen</Button>
+        {member.properties.Vorname} {member.properties.Name} ({member.properties.ID}) <Button onClick={() => selectMember(member)}>auswählen</Button>
       </div>
     </Grid>
   })

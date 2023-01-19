@@ -29,7 +29,7 @@ function CartArticleList() {
   }
 
   const rows = [
-    createData(total.articleQuantity.toString(), 'Total', '', 'head'),
+    createData(total.articleQuantity.toString(), `Total ${total.totalPrice.toFixed(2)}`, 'CHF', 'head'),
     createData('Zwischentotal inkl. MWSt', total.totalPrice.toFixed(2), 'CHF', 'body'),
     createData('MWST', vat(total.totalPrice).toFixed(2), 'CHF', 'body'),
     createData('Total', total.totalPrice.toFixed(2), 'CHF', 'body'),
