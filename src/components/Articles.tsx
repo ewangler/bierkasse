@@ -11,7 +11,6 @@ import ImageButton from './ImageButton'
 
 type Props = {
   group: ArticleGroup | undefined
-  // selectArticle: any
 }
 
 const style = {
@@ -26,8 +25,21 @@ const style = {
 };
 
 const imageTable = {
-  ZwergimBerg: "'./images/articles/zwerg.png'",
-  Biraffe: "'./images/articles/biraffe.png'",
+  ZwergimBerg: "'./images/articles/Zwerg-im-Berg.jpg'",
+  Biraffe: "./images/articles/Biraffe.jpg",
+  AlesoftheOrdinary: "./images/articles/Ales.jpg",
+  Fernando: "./images/articles/Fernando.jpg",
+  Fruchtzilla: "./images/articles/Fruchtzilla.jpg",
+  HeyPorter: "./images/articles/Hey-porter.jpg",
+  "Hopn'Ribbit": "./images/articles/Hop-n-ribbit.jpg",
+  LuckyLaks: "./images/articles/Lucky-Laks.jpg",
+  MightyHopped: "./images/articles/Mighty-hopped.jpg",
+  Nonne: "./images/articles/Nonne.jpg",
+  Quittenbock: "./images/articles/Quittenbock.jpg",
+  Samlonggone: "./images/articles/Sam-long-gone.jpg",
+  "Samn'I": "./images/articles/Sam-n-I.jpg",
+  Werner: "./images/articles/Werner.jpg",
+  Yeti: "./images/articles/Yeti.jpg",
 }
 
 // @ts-ignore
@@ -53,6 +65,7 @@ function Articles(props: Props) {
     props.group?.children?.article?.map((articleId: number) => {
       return client.get(`/article/${articleId}`).then((response) => {
         const article = response.data
+        article.group = props.group
         // @ts-ignore
         setArticles(existing => [...existing, article]);
       })

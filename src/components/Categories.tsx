@@ -13,7 +13,7 @@ function Categories() {
   }
 
   const [articleGroups, setArticleGroups] = React.useState<ArticleGroup[]>([])
-  const [value, setValue] = React.useState<ArticleGroup>()
+  const [group, setGroup] = React.useState<ArticleGroup>()
 
   React.useEffect(() => {
     client.get('/articlegroup?order=title').then((response) => {
@@ -34,19 +34,19 @@ function Categories() {
     // const image = `../data/images/${group.properties.title}.png`
     return <div key={group.properties.title}>
       <h2>{group.properties.title} ({(group.children.article ? group.children.article.length : '0')})</h2>
-      <img src={require(`../data/images/Bier.png`)} alt="bild" onClick={() => setValue((group))}/> <br/>
-      <Button variant="outlined" onClick={() => setValue((group))}>auswählen</Button>
+      <img src={require(`../data/images/Bier.png`)} alt="bild" onClick={() => setGroup((group))}/> <br/>
+      <Button variant="outlined" onClick={() => setGroup((group))}>auswählen</Button>
     </div>
   })
 
   return <div className='categories'>
-    {value ?
+    {group ?
       <>
         <div className='header'>
-          <Button className='back' variant="outlined" onClick={() => setValue(undefined)}>{"zurück"}</Button>
-          <h1>{value.properties.title}</h1>
+          <Button className='back' variant="outlined" onClick={() => setGroup(undefined)}>{"zurück"}</Button>
+          <h1>{group.properties.title}</h1>
         </div>
-        <Articles group={value} />
+        <Articles group={group} />
       </>
       :
       <div className='flex-grid-3'>{articleGroupElements}</div>

@@ -24,7 +24,7 @@ const useCartArticles = () => {
   const addArticle = (newArticle: CartArticle) => {
     let updatedArticles;
     const isArticleAlreadyInCart = articles.some(
-      (article: CartArticle) => newArticle.properties.description === article.properties.description
+      (article: CartArticle) => newArticle.properties.description === article.properties.description && newArticle.group == article.group
     );
 
     if (isArticleAlreadyInCart) {

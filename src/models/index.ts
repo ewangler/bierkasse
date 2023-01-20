@@ -17,6 +17,7 @@ export interface Article {
     description: string
     price: number
   }
+  group: ArticleGroup
 }
 
 export interface CartArticle extends Article {

@@ -9,6 +9,7 @@ import Discount from './Discount'
 import CartArticleList from './CartArticleList'
 import useCart from '../contexts/useCart'
 import { useCartContext } from '../contexts/CartContextProvider'
+import { Article, ArticleGroup } from '../models'
 
 const style = {
   position: 'absolute' as 'absolute',

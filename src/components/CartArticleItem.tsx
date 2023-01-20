@@ -32,7 +32,7 @@ function CartArticleItem(props: Props) {
     </Avatar>
   </ListItemAvatar>
   <ListItemText>
-    {article.properties.description} ({article.properties.price}.-)
+    <strong>{article.group.properties.title}:</strong> {article.properties.description} ({article.properties.price}.-)
   </ListItemText>
 </ListItem>
 }
