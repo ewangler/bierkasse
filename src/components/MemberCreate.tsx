@@ -11,6 +11,7 @@ function MemberCreate() {
   const [name, setName] = useState<string>()
   const [lastName, setLastName] = useState<string>()
   const [mail, setMail] = useState<string>()
+  const [id, setId] = useState<string>()
 
   const { setCustomer } = useCartContext()
 
@@ -25,7 +26,8 @@ function MemberCreate() {
       "properties": {
         "Vorname": name,
         "Name": lastName,
-        "E-Mail": mail
+        "E-Mail": mail,
+        "ID": id
       }
     }
 
@@ -49,6 +51,7 @@ function MemberCreate() {
       Vorname: <input type="text" required id="name" name="name" value={name} onChange={e => setName(e.target.value)} />
       Nachname: <input type="text" required id="last_name" name="last_name" value={lastName} onChange={e => setLastName(e.target.value)} />
       Email: <input type="text" required id="mail" name="mail" value={mail} onChange={e => setMail(e.target.value)} />
+      Kundennummer: <input type="text" required id="id" name="id" value={id} onChange={e => setId(e.target.value)} />
       <Button variant="contained" type="submit">Erfassen</Button>
     </form>
 
