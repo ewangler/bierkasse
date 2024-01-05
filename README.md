@@ -1,6 +1,24 @@
 # bierkasse
 
-www.brauereiimberg.ch
+[brauereiimberg.ch](http://brauereiimberg.ch/)
+
+## neue buchungsperiode
+
+https://brauereiimberg.webling.ch/api/1/account/ID
+
+account_parent = Kontenplan ID (via webling kontenplan auswaehlen und in URL id lesen)
+
+search replace in error file
+
+url + body => postman
+
+## new version
+
+make sure api key is set in client.tsx and homepage is set to bierkasseNeu in package.json
+
+`npm run build`
+
+go to build folder and upload via FileZilla
 
 ## Available Scripts
 

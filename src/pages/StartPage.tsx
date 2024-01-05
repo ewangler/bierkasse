@@ -17,6 +17,7 @@ function StartPage() {
             </Grid>
           </Grid>
         </div>
+      <p className="version">Jan. 24</p>
   </div>;
 };
 

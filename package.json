@@ -1,6 +1,7 @@
 {
   "name": "bierkasse",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "homepage": "bierkasseNeu",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.3.0",

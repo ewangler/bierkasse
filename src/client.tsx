@@ -34,6 +34,9 @@ export default axios.create({
   // baseURL: 'https://www.brauereiimberg.ch/bierkasse/new/index.php',
   headers: {
     "Content-type": "application/json",
-    'apikey': 'xxx'
+    'apikey': 'xx'
   },
+  params: {
+    'apikey': 'xx'
+  }
 });
