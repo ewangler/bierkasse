@@ -12,7 +12,10 @@ export const CREDIT_ACCOUNT_GUTSCHRIFT = 39
 export const DEBIT_ACCOUNT_GUTSCHRIFT = 15
 
 // id buchungsperiode
-export const ACCOUNT_PARENT = 14400
+export const ACCOUNT_PARENT = 23757
 export const MATERIAL_GRUPPEN = "475,167"
 
 export const MEMBER_PARENT = 171
+
+// MWST
+export const MWST = 8.1

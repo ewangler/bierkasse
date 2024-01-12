@@ -4,6 +4,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import useCart from '../contexts/useCart';
+import * as constants from '../service/constants';
 import { useCartContext } from '../contexts/CartContextProvider';
 
 
@@ -13,7 +14,7 @@ function CartArticleList() {
   const { total } = useCart();
 
   const vat = (price: number) => {
-    const vatRate = 7.7
+    const vatRate = constants.MWST
     return price - price / (vatRate / 100 + 1)
   }
 
