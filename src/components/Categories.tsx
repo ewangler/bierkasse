@@ -7,6 +7,14 @@ import Articles from './Articles';
 
 function Categories() {
 
+  const imageTable = {
+    Flaschenbier: "Flaschenbier.png",
+    Essen: "Burger.png",
+    Bar: "Bar.png"
+  }
+
+  // @ts-ignore
+  const imageMapper = (title: string) => imageTable[title] || "Bier.png"
 
   function compareGroups(a: ArticleGroup, b: ArticleGroup) {
     return a.properties.title > b.properties.title ? 1 : -1;
@@ -34,7 +42,7 @@ function Categories() {
     // const image = `../data/images/${group.properties.title}.png`
     return <div key={group.properties.title}>
       <h2>{group.properties.title} ({(group.children.article ? group.children.article.length : '0')})</h2>
-      <img src={require(`../data/images/Bier.png`)} alt="bild" onClick={() => setGroup((group))}/> <br/>
+      <img src={require(`../data/images/${imageMapper(group.properties.title.replaceAll(' ', ''))}`)} width="100" alt="bild" onClick={() => setGroup((group))}/> <br/>
       <Button variant="outlined" onClick={() => setGroup((group))}>auswählen</Button>
     </div>
   })

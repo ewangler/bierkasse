@@ -1,6 +1,6 @@
 {
   "name": "bierkasse",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "bierkasseNeu",
   "private": true,
   "dependencies": {
@@ -23,7 +23,6 @@
     "react-dom": "^18.0.0",
     "react-router": "^5.2.1",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.1",
     "typescript": "^4.6.3",
     "web-vitals": "^2.1.4"
   },
